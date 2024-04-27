@@ -1,6 +1,3 @@
-<?php
-	require 'config/database.php'
-?>
 <!DOCTYPE html>
 <html>
 
@@ -54,9 +51,7 @@
 						</div>	
 					</div>
 					<div class="table">
-						<a href="form.php">
-							<button type="button" id="tambah-stok-obat">Tambah Data</button>
-						</a>
+						<button type="button" id="tambah-stok-obat">Tambah Data</button>
 
 						<div class="table-container">
 							<table id="data-table">
@@ -65,7 +60,6 @@
 										<th>Nama Obat</th>
 										<th>Jumlah</th>
 										<th>Harga</th>
-										<th>Tombol</th>
 									</tr>
 								</thead>
 								<tbody id="data-table-body">
@@ -91,21 +85,22 @@
 
 									<?php
           
-										$query = "SELECT * FROM drug";
+										$query = "SELECT * FROM guru";
 
-										$read = mysqli_query($conn, $query);
+										$read = mysqli_query($con, $query);
 
 										if (!$read){
-											die("Pembacaan Gagal".mysqli_error($conn));
+											die("Pembacaan Gagal".mysqli_error($con));
 										}else{
 											while($row = mysqli_fetch_assoc($read)){
 									?>
 
           <tr>
-            <td><?php echo $row['Nama']; ?></td>
-            <td><?php echo $row['Jumlah']; ?></td>
-            <td><?php echo $row['Harga']; ?></td>
-            <td><button class="update-button">Update</button><a href="delete.php?id=<?php echo $row['ID']; ?>" class="btn btn-danger">Delete</a></td>
+            <td><?php echo $row['id_guru']; ?></td>
+            <td><?php echo $row['no_hp']; ?></td>
+            <td><?php echo $row['nama_guru']; ?></td>
+            <td><button class="update-button" onclick="showPopup(<?php echo $row['id_guru']; ?>, '<?php echo $row['no_hp']; ?>', '<?php echo $row['nama_guru']; ?>')">Update</button></td>
+            <td><a href="delete.php?id=<?php echo $row['id_guru']; ?>" class="btn btn-danger">Delete</a></td>
           </tr>
 
           <?php
