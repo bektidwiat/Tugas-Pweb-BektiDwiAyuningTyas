@@ -1,8 +1,8 @@
 <?php
 
-require '../../config/database.php';
+require 'config/database.php';
 
-class PortofolioModel{
+class drugModel{
 
   static function read(){
     global $conn;
@@ -30,7 +30,7 @@ class PortofolioModel{
 
   static function detail($id){
     global $conn;
-    $query = "select * from portofolio WHERE id_porto=".$id;
+    $query = "select * from drug WHERE ID=".$id;
     $result = mysqli_query($conn, $query);
     if ($result->num_rows > 0) {
       $data = mysqli_fetch_object($result);
@@ -61,4 +61,16 @@ class PortofolioModel{
     $stmt->close();
     return $result;
   }
+
+  static function Foto($id){
+    global $conn;
+    $query = "insert into portofolio where id_porto=?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->affected_rows > 0 ? true : false;
+    $stmt->close();
+    return $result;
+  }
+
 }

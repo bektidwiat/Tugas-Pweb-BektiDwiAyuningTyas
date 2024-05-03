@@ -1,9 +1,10 @@
 <?php 
 
-$host = 'localhost';
-$username = 'root';
-$password = '';
-$database = 'tugaspweb';
+include 'env.php';
+$host = $_ENV['DB_HOST'];
+$username = $_ENV['DB_USER'];
+$password = $_ENV['DB_PASS'];
+$database = $_ENV['DB_NAME'];
 
 try {
   $conn = new mysqli($host, $username, $password, $database);
@@ -11,3 +12,4 @@ try {
 
   die('database error');
 }
+?>

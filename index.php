@@ -1,5 +1,5 @@
 <?php
-	require 'config/database.php'
+	require 'config/database.php';
 ?>
 <!DOCTYPE html>
 <html>
@@ -16,7 +16,7 @@
 				<a href="#dashboard" id="Button-Dashboard">Dashboard</a>
 				<a href="#users" id="Button-Users">Users</a>
 				<a href="#data-obat" id="Button-Data-Obat">Data Obat</a>
-				<a href="#data-penjualan" id="Button-data-Penjualan">Data Penjualan</a>
+				<a href="data-penjualan" id="Button-data-Penjualan">Resep Obat</a>
 				<a href="#tagihan-obat" id="Button-Tagihan-Obat">Tagihan Obat</a>
 				<a href="#">Log Out</a>
 		</header> 
@@ -26,14 +26,14 @@
 				<div class="data">
 					<div class="data-item">
 							<h2>Stok Obat</h2>
-							<p>22</p>
+							<p>1143</p>
 							<!-- <button type="button" id="tambah-stok-obat">Tambah Data</button>
 							<button type="button" id="edit-stok-obat">Edit</button>
 							<button type="button" id="hapus-stok-obat">Hapus</button> -->
 						</div>
 						<div class="data-item">
 							<h2>Obat Terjual</h2>
-							<p>8</p>
+							<p>210</p>
 							<!-- <button type="button" id="tambah-obat-terjual">Tambah Data</button>
 							<button type="button" id="edit-stok-obat">Edit</button>
 							<button type="button" id="hapus-stok-obat">Hapus</button> -->
@@ -65,7 +65,9 @@
 										<th>Nama Obat</th>
 										<th>Jumlah</th>
 										<th>Harga</th>
-										<th>Tombol</th>
+										<th>Resep</th>
+										<th>Update</th>
+										<th>Hapus</th>
 									</tr>
 								</thead>
 								<tbody id="data-table-body">
@@ -90,29 +92,40 @@
 									</tr> -->
 
 									<?php
-          
-										$query = "SELECT * FROM drug";
+									$query = "SELECT * FROM drug";
+									$read = mysqli_query($conn, $query);
+									if (!$read){
+										die("Pembacaan Gagal".mysqli_error($conn));
+									} else {
+										while($row = mysqli_fetch_assoc($read)){
+											?>
+											<tr>
+												<td><?php echo $row['Nama']; ?></td>
+												<td><?php echo $row['Jumlah']; ?></td>
+    											<td><?php echo $row['Harga']; ?></td>
+												<td><a href="tambah-resep-obat.php">
+														<button type="submit" class="">Foto</button>
+													</a><?php echo $row['Foto']; ?></td>
+												<td>
+													<a href="form_update.php?id=<?php echo $row['ID']; ?>" class="">
+														<button type="submit" class="">Update</button>
+													</a>
+												</td>
+												<td>
+													<a href="delete_data.php?id=<?php echo $row['ID']; ?>" class="">
+														<button type="submit" class="">Hapus</button>
+													</a>
+												</td>
+												<!-- <td>
+													
+												</td> -->
+											</tr>
+									<?php
+    									}
+									}
+											?>
 
-										$read = mysqli_query($conn, $query);
-
-										if (!$read){
-											die("Pembacaan Gagal".mysqli_error($conn));
-										}else{
-											while($row = mysqli_fetch_assoc($read)){
-									?>
-
-          <tr>
-            <td><?php echo $row['Nama']; ?></td>
-            <td><?php echo $row['Jumlah']; ?></td>
-            <td><?php echo $row['Harga']; ?></td>
-            <td><button class="update-button">Update</button><a href="delete.php?id=<?php echo $row['ID']; ?>" class="btn btn-danger">Delete</a></td>
-          </tr>
-
-          <?php
-            }
-
-          }
-          ?>
+          					
 								</tbody>
 							</table>
 						</div>
