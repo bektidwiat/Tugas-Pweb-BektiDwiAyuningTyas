@@ -1,143 +1,66 @@
 <?php
-	require 'config/database.php';
-?>
+session_start();
+require 'config\database.php';
+if(isset($_SESSION["login"])) {
+    header("Location: dashbooard.php");
+    exit;
+  }
+  
+  
+  if (isset($_POST["login"])) {
+    $username = $_POST["username"];
+    $password = $_POST["password"];
+  
+    $result = mysqli_query($conn,"SELECT * FROM akun WHERE username = '$username'");
+  
+    // cek username
+    if (mysqli_num_rows($result) === 1) {
+        // cek password
+        $row = mysqli_fetch_assoc($result);
+        if(password_verify($password, $row["password"])) {
+            // set session
+            $_SESSION["login"] = true;
+            $_SESSION["namalengkap"] = $username;
+            header("Location: dashbooard.php");
+            exit;
+        };
+    }
+  
+    $error = true;
+  }
+  
+  ?>
 <!DOCTYPE html>
-<html>
-
+<html lang="id">
 <head>
-	<title>Apotek Pratama</title>
-	<link rel="stylesheet" type="text/css" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apotek Pratama - Login</title>
+  <link rel="stylesheet" href="loginregister-style.css">
 </head>
-
 <body>
-	<div class="container">
-		<header>
-			<div class="tagline">ADMIN APOTEK</div>
-				<a href="#dashboard" id="Button-Dashboard">Dashboard</a>
-				<a href="#users" id="Button-Users">Users</a>
-				<a href="#data-obat" id="Button-Data-Obat">Data Obat</a>
-				<a href="data-penjualan" id="Button-data-Penjualan">Resep Obat</a>
-				<a href="#tagihan-obat" id="Button-Tagihan-Obat">Tagihan Obat</a>
-				<a href="#">Log Out</a>
-		</header> 
-		<div class="main">
-			<div class="dashboard">
-				<h1>Dashboard</h1>
-				<div class="data">
-					<div class="data-item">
-							<h2>Stok Obat</h2>
-							<p>1143</p>
-							<!-- <button type="button" id="tambah-stok-obat">Tambah Data</button>
-							<button type="button" id="edit-stok-obat">Edit</button>
-							<button type="button" id="hapus-stok-obat">Hapus</button> -->
-						</div>
-						<div class="data-item">
-							<h2>Obat Terjual</h2>
-							<p>210</p>
-							<!-- <button type="button" id="tambah-obat-terjual">Tambah Data</button>
-							<button type="button" id="edit-stok-obat">Edit</button>
-							<button type="button" id="hapus-stok-obat">Hapus</button> -->
-						</div>
-						<div class="data-item">
-							<h2>Obat Expired</h2>
-							<p>3</p>
-							<!-- <button type="button" id="tambah-obat-expired">Tambah Data</button>
-							<button type="button" id="edit-stok-obat">Edit</button>
-							<button type="button" id="hapus-stok-obat">Hapus</button> -->
-						</div>
-						<div class="data-item">
-							<h2>Laporan</h2>
-							<p>340</p>
-							<!-- <button type="button" id="tambah-user">Tambah Data</button>
-							<button type="button" id="edit-stok-obat">Edit</button>
-							<button type="button" id="hapus-stok-obat">Hapus</button> -->
-						</div>	
-					</div>
-					<div class="table">
-						<a href="form.php">
-							<button type="button" id="tambah-stok-obat">Tambah Data</button>
-						</a>
+  <div class="container">
+    <?php
+      // Check for failed login attempt (if any)
+      if (isset($_GET['loginFailed'])) {
+        echo '<p style="color: red;">Username atau Password salah!</p>';
+      }
+    ?>
+    <h1>Selamat Datang di Apotek Pratama!</h1>
 
-						<div class="table-container">
-							<table id="data-table">
-								<thead>
-									<tr>
-										<th>Nama Obat</th>
-										<th>Jumlah</th>
-										<th>Harga</th>
-										<th>Resep</th>
-										<th>Update</th>
-										<th>Hapus</th>
-									</tr>
-								</thead>
-								<tbody id="data-table-body">
-									<!-- <tr>
-										<td>Paracetamol</td>
-										<td>10</td>
-										<td>4000</td>
-									</tr>
-								</tbody>
-								<tbody id="data-table-body">
-									<tr>
-										<td>Amlodipin</td>
-										<td>30</td>
-										<td>15000</td>
-									</tr>
-								</tbody>
-								<tbody id="data-table-body">
-									<tr>
-										<td>Cetirizin</td>
-										<td>20</td>
-										<td>10000</td>
-									</tr> -->
-
-									<?php
-									$query = "SELECT * FROM drug";
-									$read = mysqli_query($conn, $query);
-									if (!$read){
-										die("Pembacaan Gagal".mysqli_error($conn));
-									} else {
-										while($row = mysqli_fetch_assoc($read)){
-											?>
-											<tr>
-												<td><?php echo $row['Nama']; ?></td>
-												<td><?php echo $row['Jumlah']; ?></td>
-    											<td><?php echo $row['Harga']; ?></td>
-												<td><a href="tambah-resep-obat.php">
-														<button type="submit" class="">Foto</button>
-													</a><?php echo $row['Foto']; ?></td>
-												<td>
-													<a href="form_update.php?id=<?php echo $row['ID']; ?>" class="">
-														<button type="submit" class="">Update</button>
-													</a>
-												</td>
-												<td>
-													<a href="delete_data.php?id=<?php echo $row['ID']; ?>" class="">
-														<button type="submit" class="">Hapus</button>
-													</a>
-												</td>
-												<!-- <td>
-													
-												</td> -->
-											</tr>
-									<?php
-    									}
-									}
-											?>
-
-          					
-								</tbody>
-							</table>
-						</div>
-
-					</div>
-				
-				</div>
-		</div>
-	<footer>
-		<p>&copy; 2024 Apotek Sumber Sehat, Jember, Jawa Timur</p>
-	</footer>
-	<script src="script.js"></script>
+    <div class="login-box">
+      <h2>Login</h2>
+      <form action="" method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" placeholder="Masukkan username">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" placeholder="Masukkan password">
+        <button name= 'login' type="submit">Login</button>
+      </form>
+      <p>Belum memiliki akun? <a href="register.php">Daftar Sekarang</a></p>
+    </div>
+  </div>
 </body>
-
 </html>
+
+
